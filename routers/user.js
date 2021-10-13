@@ -64,7 +64,7 @@ router.post('/login', async (req, res) => {
 router.post('/loginwhat?', async (req, res) => {
   const { email, pw } = req.body;
   let users
-  const post = `SELECT * FROM uesr WHERE userId = ${decoded.userId}`;
+  const post = `SELECT * FROM uesr WHERE email = ${email}`;
   db.query(post, (error, results) => {
     users = results[0]
   });
@@ -85,11 +85,18 @@ router.post('/loginwhat?', async (req, res) => {
 //회원가입 쿼리문
 router.post('/signupwhat', async (req, res) => {
   const { email, pw, pwCheck, nickname } = req.body;
-  const existId = await User.findOne({ email: email });
-  const existName = await User.findOne({ nickname: nickname });
-  if (existId) {
-    res.status(400).send({ result: '아이디가 중복입니다.' });
-  } else if (existName) {
+  let existEmail , existNickname;
+  const post = `SELECT * FROM uesr WHERE email = "${email}";`;
+  db.query(post, (error, results) => {
+    existEmail = results[0]
+  });
+  const post = `SELECT * FROM uesr WHERE nickname = "${nickname}";`;
+  db.query(post, (error, results) => {
+    existNickname = results[0]
+  });
+  if (existEmail) {
+    res.status(401).send({ result: '아이디가 중복입니다.' });
+  } else if (existNickname) {
     res.status(401).send({ result: '닉네임이 중복입니다.' });
   } else if (!uf.idCheck(email)) {
     res.status(401).send({});
