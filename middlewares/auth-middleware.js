@@ -1,5 +1,11 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const mysql = require('mysql');
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE
+});
 
 module.exports = async (req, res, next) => {
   const token = req.cookies.user;
@@ -7,12 +13,15 @@ module.exports = async (req, res, next) => {
   try {
     if (token) {
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
-      const user = await User.findOne({ userId: decoded.userId }).exec();
-      const users ={
-        userId : user._id,
-        email: user.email,
-        nickname: user.nickname,
-      }
+      let users;
+      const post = `SELECT * FROM uesr WHERE userId = ${decoded.userId}`;
+      db.query(post, (error, results) => {
+        users = {
+          userId : results[0]["userId"],
+          email: results[0]["email"],
+          nickname: results[0]["nickname"],
+        }
+      });
       
       res.locals.user = users;
       console.log('로컬 유저는?', res.locals.user);
