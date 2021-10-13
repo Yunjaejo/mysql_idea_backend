@@ -22,6 +22,7 @@ router.post("/:postId", async (req, res) => {
   const { nickname, comment } = req.body;
   let newDate = new Date();
   let date = newDate.toFormat("YYYY-MM-DD HH24:MI:SS");
+  let userId;
   try {
     const post = `INSERT INTO comment (commentTime, nickname, comment, upperPost ) VALUES ("${date}","${nickname}", "${comment}", "${postId}");`;
     db.query(post, req.body, (error, results, fields) => {
@@ -41,6 +42,15 @@ router.patch("/:commentId", async (req, res) => {
   const { email, comment } = req.body;
   
   try {
+    const post = `UPDATE user SET comment= "${comment}" WHERE commentId = ${commentId};`;
+    db.query(post, req.body, (error, results, fields) => {
+      if (error) {
+        res.status(400).send(error);
+      } else {
+        res.status(200).send({ results });
+      }
+    });
+    
     const post = `UPDATE comment SET comment= "${comment}" WHERE commentId = ${commentId};`;
     db.query(post, req.body, (error, results, fields) => {
       if (error) {
