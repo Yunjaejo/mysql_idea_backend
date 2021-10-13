@@ -34,7 +34,7 @@ router.get('/:postId', (req, res) => {
     const { postId } = req.params;
     const post = `SELECT * FROM post WHERE postId = ${postId}`;
     db.query(post, (error, results) => {
-      res.send({ results });
+      res.status(200).send({ results });
     });
   } catch (err) {
     res.status(400).send({ err: err });
@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
   const { title, spec, image, desc, place } = req.body;
   try {
     const post = `INSERT INTO post (title, spec, image, descr, place) VALUES ("${title}", "${spec}", "${image}", "${desc}", "${place}")`;
-    await db.query(post, req.body, (error, results, fields) => {
+    db.query(post, req.body, (error, results, fields) => {
       if (error) {
         res.send(error);
       } else {
@@ -58,42 +58,40 @@ router.post('/', async (req, res) => {
   }
 });
 
-// //게시물 삭제
-// router.delete('/:postId', async (req, res) => {
-//   const { postId } = req.params;
-//   const { nickname } = req.body;
-//   const ispost = await posts.findById(postId);
-//   if (ispost) {
-//     //nickname == ispost["nickname"]
-//     if (true) {
-//       await posts.deleteOne({ postId });
-//       res.status(200).send({ result: 'success' });
-//     } else {
-//       res.status(400).send({ result: '사용자 본인이 아님' });
-//     }
-//   } else {
-//     res.status(400).send({ result: '게시글 존재하지 않음' });
-//   }
-// });
-//
-// //게시물 수정
-// router.patch('/:postId', async (req, res) => {
-//   const { postId } = req.params;
-//   const { title, spec, image, desc, place } = req.body;
-//   console.log(postId, title, spec, image, desc, place);
-//   const ispost = await posts.findById(postId);
-//   console.log(ispost);
-//   if (ispost) {
-//     //nickname == ispost["nickname"]
-//     if (true) {
-//       await posts.updateOne({ postId }, { $set: { title: title, spec: spec, image: image, desc: desc, place: place } });
-//       res.status(200).send({ result: 'success' });
-//     } else {
-//       res.status(400).send({ result: 'err' });
-//     }
-//   } else {
-//     res.status(400).send({ result: '게시글 존재하지 않음' });
-//   }
-// });
+//게시물 삭제
+router.delete('/:postId', async (req, res) => {
+  const { postId } = req.params;
+  const { nickname } = req.body;
+  try {
+    const post = `DELETE FROM post WHERE postId = ${postId} and title = "${nickname}";`;
+    db.query(post, req.body, (error, results, fields) => {
+      if (error) {
+        res.status(400).send(error);
+      } else {
+        res.status(200).send({ results });
+      }
+    });
+  } catch (err) {
+    res.status(400).send({ err: err });
+  }
+});
+
+//게시물 수정
+router.patch('/:postId', async (req, res) => {
+  const { postId } = req.params;
+  const { title, spec, image, desc, place } = req.body;
+  try {
+    const post = `UPDATE post SET title= "${title}",spec ="${spec}",descr ="${desc}",image ="${image}",place =${place} WHERE postId = ${postId};`;
+    db.query(post, req.body, (error, results, fields) => {
+      if (error) {
+        res.status(400).send(error);
+      } else {
+        res.status(200).send({ results });
+      }
+    });
+  } catch (err) {
+    res.status(400).send({ err: err });
+  }
+});
 
 module.exports = router;
