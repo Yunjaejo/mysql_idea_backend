@@ -41,13 +41,17 @@ router.get('/:postId', (req, res) => {
   }
 });
 
-//게시물 작성 (수정 필요)
+//게시물 작성
 router.post('/', async (req, res) => {
-  const { title, spec, nickname, image, desc, place } = req.body;
+  const { title, spec, image, desc, place } = req.body;
   try {
-    const post = `INSERT INTO post (title, spec, image, descr, place) VALUES (${title}, ${spec}, ${image}, ${desc}, ${place})`;
-    await db.query(post, (error, results) => {
-      res.send({ result: "success", results: results });
+    const post = `INSERT INTO post (title, spec, image, descr, place) VALUES ("${title}", "${spec}", "${image}", "${desc}", "${place}")`;
+    await db.query(post, req.body, (error, results, fields) => {
+      if (error) {
+        res.send(error);
+      } else {
+        res.send({ results });
+      }
     });
   } catch (err) {
     res.status(400).send({ err: err });
