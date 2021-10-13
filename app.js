@@ -2,14 +2,13 @@ const express = require('express'); // 익스프레스 참조
 const cookieParser = require('cookie-parser');
 const app = express(); // 익스프레스 쓸때는 app이라고 명시
 app.use(cookieParser()); // 쿠키값을 꺼낼 수 있음
+const dotenv = require("dotenv")
+dotenv.config()
+
 const port = process.env.PORT;
 // const authMiddleware = require('./middlewares/auth-middleware');
 const cors = require('cors');
 const mysql = require('mysql');
-
-const dotenv = require("dotenv")
-dotenv.config()
-
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
