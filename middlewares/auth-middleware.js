@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
-const util = require('util')
+const util = require('util');
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE
 });
-db.query = util.promisify(db.query)
+db.query = util.promisify(db.query);
 
 module.exports = async (req, res, next) => {
   const token = req.cookies.user;
@@ -15,15 +15,15 @@ module.exports = async (req, res, next) => {
   try {
     if (token) {
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
-      let users
-      const post = `SELECT * FROM uesr WHERE userId = ${decoded.userId}`;
-      const results = db.query(post)
+      let users;
+      const post = `SELECT * FROM user WHERE userId = ${decoded.userId}`;
+      const results = db.query(post);
       users = {
-        userId : results[0]["userId"],
-        email: results[0]["email"],
-        nickname: results[0]["nickname"],
-      }
-      
+        userId: results[0]['userId'],
+        email: results[0]['email'],
+        nickname: results[0]['nickname'],
+      };
+
       res.locals.user = users;
       console.log('로컬 유저는?', res.locals.user);
     } else {

@@ -9,8 +9,8 @@ const connect = () => {
         useUnifiedTopology: true,
         useNewUrlParser: true,
       }
-    )
-    // .catch((err) => console.error(err));
+    );
+  // .catch((err) => console.error(err));
 };
 
 mongoose.connection.on('error', (err) => {

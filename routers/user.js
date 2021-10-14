@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const uf = require('./userfunction.js');
-const util = require('util')
+const util = require('util');
 const mysql = require('mysql');
 const db = mysql.createPool({
   connectionLimit: 10,
@@ -11,7 +11,7 @@ const db = mysql.createPool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE
 });
-db.query = util.promisify(db.query)
+db.query = util.promisify(db.query);
 // const mysql = require('sync-mysql');
 // const db = new mysql({
 //   host: process.env.DB_HOST,
@@ -67,14 +67,12 @@ router.post('/login', async (req, res) => {
 });
 
 
-
-
 // 로그인 쿼리문
-router.post('/loginwhat?', async (req, res) => {
+router.post('/loginwhat', async (req, res) => {
   const { email, pw } = req.body;
-  let users
-  const post = `SELECT * FROM uesr WHERE email = ${email}`;
-  const results = db.query(post)
+  let users;
+  const post = `SELECT * FROM user WHERE email = "${email}"`;
+  const results = await db.query(post);
   users = results[0];
   if (users) {
     if (users.password === pw) {
@@ -112,7 +110,7 @@ router.post('/signupwhat', async (req, res) => {
       if (error) {
         res.status(401).send(error);
       } else {
-        res.send({ results : "완료?" });
+        res.send({ results: '완료?' });
       }
     });
   }
