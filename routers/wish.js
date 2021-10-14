@@ -1,23 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/auth-middleware');
-const Post = require('../models/post');
-const User = require('../models/user');
-const Wish = require('../models/wish');
+const mysql = require('mysql');
+const db = mysql.createPool({
+  connectionLimit: 10,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE
+});
+db.query = util.promisify(db.query);
 
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const { user } = res.locals;
-    const wish = await Wish.find({ userId: user.userId });
+    const post = `SELECT * FROM wish WHERE userId = "${user.userId}"`;
+    const results = await db.query(post);
+
     let b = [];
-    for (a of wish) {
+    for (a of results) {
       b.push(a['postId']);
     }
     //Post.find ( { _id: { $in: b } } )
     let d = [];
+    
     for (c of b) {
-      let post = await Post.findById(c);
-      d.push(post);
+      const posttest = `SELECT * FROM post WHERE postId = "${c}"`;
+      const results123 = await db.query(posttest);
+      d.push(results123);
     }
     console.log(d);
 
@@ -31,7 +41,7 @@ router.post('/', authMiddleware, async (req, res) => {
   try {
     const { email, postId } = req.body;
     const isUser = await User.findOne({ email: email });
-
+    
     await Wish.create({ userId: isUser._id, postId: postId });
     res.status(200).send({ post: d });
   } catch (err) {
