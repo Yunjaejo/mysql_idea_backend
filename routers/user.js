@@ -74,9 +74,8 @@ router.post('/loginwhat?', async (req, res) => {
   const { email, pw } = req.body;
   let users
   const post = `SELECT * FROM uesr WHERE email = ${email}`;
-  db.query(post, (error, results) => {
-    users = results[0]
-  });
+  const results = db.query(post)
+  users = results[0];
   if (users) {
     if (users.password === pw) {
       //{expiresIn: '5m'}
