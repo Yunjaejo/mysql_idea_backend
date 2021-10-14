@@ -23,7 +23,7 @@ router.get('/', authMiddleware, async (req, res) => {
     }
     //Post.find ( { _id: { $in: b } } )
     let d = [];
-    
+
     for (c of b) {
       const posttest = `SELECT * FROM post WHERE postId = "${c}"`;
       const results123 = await db.query(posttest);
@@ -37,30 +37,37 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
-router.post('/', authMiddleware, async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
+  const { email, postId } = req.body;
   try {
-    const { email, postId } = req.body;
-    const isUser = await User.findOne({ email: email });
-    
-    await Wish.create({ userId: isUser._id, postId: postId });
-    res.status(200).send({ post: d });
+    const post = INSERT INTO post (email, postId) VALUES ( "${email}", "${postId}");
+    db.query(post, req.body, (error, results) => {
+      if (error) {
+        console.log((error));
+        res.status(400).send(error);
+      } else {
+        res.send({ results });
+      }
+    });
   } catch (err) {
     res.status(400).send({ err: err });
   }
 });
 
-router.delete('/:wishId', authMiddleware, async (req, res) => {
+router.delete("/:wishId", async (req, res) => {
   const { wishId } = req.params;
-  const iswish = await Wish.findById(wishId);
-  if (iswish) {
-    if (true) {
-      await Wish.deleteOne({ _id: wishId });
-      res.status(200).send({ result: 'success' });
-    } else {
-      res.status(400).send({ result: '사용자 본인이 아님' });
-    }
-  } else {
-    res.status(400).send({ result: '게시글 존재하지 않음' });
+  const { isWish } = req.body;
+  try {
+    const post = DELETE FROM post WHERE postId = ${wishId} and nickname = "${isWish}";;
+    db.query(post, req.body, (error, results, fields) => {
+      if (error) {
+        res.status(400).send(error);
+      } else {
+        res.status(200).send({ results });
+      }
+    });
+  } catch (err) {
+    res.status(400).send({ err: err });
   }
 });
 
