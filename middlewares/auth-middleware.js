@@ -28,6 +28,7 @@ module.exports = async (req, res, next) => {
       console.log('로컬 유저는?', res.locals.user);
     } else {
       res.locals.user = undefined;
+      console.log('토큰 없습니다.')
       console.log('로컬 유저는?', res.locals.user);
     }
   } catch (err) {
