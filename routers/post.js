@@ -47,9 +47,19 @@ router.get('/:postId', async (req, res) => {
 //게시물 작성
 router.post('/', async (req, res) => {
   const { title, nickname, spec, image, desc, place } = req.body;
+  const escapeQuery = {
+    title: title,
+    nickname: nickname,
+    spec: spec,
+    image: image,
+    descr: desc,
+    place: place,
+  }
+
   try {
-    const post = `INSERT INTO post (title, nickname, spec, image, descr, place) VALUES ("${title}", "${nickname}", "${spec}", "${image}", "${desc}", "${place}")`;
-    await db.query(post, req.body, (error, results) => {
+    console.log(image);
+    const post = `INSERT INTO post set ?`;
+    await db.query(post, escapeQuery, (error, results) => {
       if (error) {
         console.log((error));
         res.status(400).send(error);
