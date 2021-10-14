@@ -39,8 +39,8 @@ function pw_idCheck(id_give, pw_give) {
 }
 
 async function emailExist(id_give) {
-  const post = `SELECT * FROM user WHERE email = "${id_give}";`;
-  const results = await db.query(post);
+  const post = 'SELECT * FROM user WHERE email = ?;';
+  const results = await db.query(post,[id_give]);
   if (results.length) {
     return false;
   } else {
@@ -49,8 +49,8 @@ async function emailExist(id_give) {
 }
 
 async function nicknameExist(id_give) {
-  const post = `SELECT * FROM user WHERE nickname = "${ id_give }";`;
-  const results = await db.query(post);
+  const post = 'SELECT * FROM user WHERE nickname = ?};';
+  const results = await db.query(post,[id_give]);
   if (results.length) {
     return false;
   } else {

@@ -14,8 +14,9 @@ const db = mysql.createConnection({
 router.get('/:postId', async (req, res) => {
   try {
     const { postId } = req.params;
-    const post = `SELECT * FROM comment WHERE upperPost = ${postId}`;
-    await db.query(post, (error, results) => {
+    const docomment = [postId]
+    const post = 'SELECT * FROM comment WHERE upperPost = ?';
+    await db.query(post, docomment,(error, results) => {
       res.status(200).send({ results });
     });
   } catch (err) {
@@ -29,10 +30,16 @@ router.post('/:postId', async (req, res) => {
   const { nickname, comment } = req.body;
   let newDate = new Date();
   let date = newDate.toFormat('YYYY-MM-DD HH24:MI:SS');
-
+ 
+  var docomment  = {
+    commentTime : date,
+    nickname : nickname,
+    comment : comment,
+    upperPost : postId
+    }
   try {
-    const post = `INSERT INTO comment (commentTime, nickname, comment, upperPost ) VALUES ("${date}", "${nickname}", "${comment}", "${postId}");`;
-    await db.query(post, req.body, (error, results, fields) => {
+    const post = 'INSERT INTO comment set ?;';
+    await db.query(post, docomment, (error, results, fields) => {
       if (error) {
         console.log(error);
         res.status(400).send(error);
@@ -50,9 +57,10 @@ router.patch('/:commentId', authMiddleware, async (req, res) => {
   const { commentId } = req.params;
   const { comment } = req.body;
   const user = res.locals.user;
+  var docomment = [comment, commentId , user.nickname]
   try {
-    const post = `UPDATE comment SET comment= "${comment}" WHERE commentId = ${commentId} AND nickname = ${user.nickname};`;
-    await db.query(post, req.body, (error, results, fields) => {
+    const post = 'UPDATE comment SET comment= ? WHERE commentId = ? AND nickname = ?;';
+    await db.query(post, docomment, (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
       } else {
@@ -68,8 +76,9 @@ router.patch('/:commentId', authMiddleware, async (req, res) => {
 router.delete('/:commentId', authMiddleware, async (req, res) => {
   const { commentId } = req.params;
   const user = res.locals.user;
+  var docomment = [commentId, user.nickname]
   try {
-    const post = `DELETE FROM comment WHERE commentId = ${commentId} AND nickname = ${user.nickname};`;
+    const post = 'DELETE FROM comment WHERE commentId = ? AND nickname = ?;';
     await db.query(post, req.body, (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
