@@ -10,7 +10,7 @@ const db = mysql.createPool({
 db.query = util.promisify(db.query);
 
 module.exports = async (req, res, next) => {
-  const token = req.locals.user;
+  const token = req.cookies.user;
   console.log('미들웨어 사용함');
   try {
     if (token) {

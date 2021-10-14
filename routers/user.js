@@ -1,4 +1,6 @@
 const express = require('express');
+const cookieParser = require('cookie-parser')
+app.use(cookieParser)
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const uf = require('./userfunction.js');
