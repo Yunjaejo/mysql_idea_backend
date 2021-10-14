@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
 const util = require('util');
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -10,20 +10,20 @@ const db = mysql.createConnection({
 db.query = util.promisify(db.query);
 
 module.exports = async (req, res, next) => {
-  const token = req.cookies.user;
+  const token = req.locals.use;
   console.log('미들웨어 사용함');
   try {
     if (token) {
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
       let users;
-      const post = `SELECT * FROM user WHERE userId = ?`;
-      const results = db.query(post,[decoded.userId]);
+      const post = `SELECT * FROM user WHERE email = ?`;
+      const results = await db.query(post,[decoded.email]);
+      console.log(results)
       users = {
         userId: results[0]['userId'],
         email: results[0]['email'],
         nickname: results[0]['nickname'],
       };
-
       res.locals.user = users;
       console.log('로컬 유저는?', res.locals.user);
     } else {
