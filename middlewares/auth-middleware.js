@@ -11,7 +11,15 @@ db.query = util.promisify(db.query);
 
 module.exports = async (req, res, next) => {
 
-  const token = req.get('user')
+  const {authorization} = req.headers;
+  const [tokenType, token] = authorization.split(' ')
+
+  if (tokenType !== "Bearer"){
+    res.status(401).send({
+      errorMessage: "로그인이 필요합니다."
+    });
+    return;
+  }
 
   console.log('미들웨어 사용함');
   try {
