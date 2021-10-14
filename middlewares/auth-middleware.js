@@ -10,7 +10,8 @@ const db = mysql.createPool({
 db.query = util.promisify(db.query);
 
 module.exports = async (req, res, next) => {
-  const token = req.locals.use;
+  const token = req.get('user')
+  
   console.log('미들웨어 사용함');
   try {
     if (token) {
@@ -24,6 +25,7 @@ module.exports = async (req, res, next) => {
         email: results[0]['email'],
         nickname: results[0]['nickname'],
       };
+
       res.locals.user = users;
       console.log('로컬 유저는?', res.locals.user);
     } else {
