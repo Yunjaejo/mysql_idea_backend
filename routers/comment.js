@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/auth-middleware');
+require('date-utils')
 const mysql = require('mysql');
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -9,8 +10,7 @@ const db = mysql.createConnection({
   database: process.env.DB_DATABASE
 });
 
-// postId 검증은 내일하자...!
-
+// 댓글 조회
 router.get('/:postId', async (req, res) => {
   try {
     const { postId } = req.params;
@@ -23,16 +23,18 @@ router.get('/:postId', async (req, res) => {
   }
 });
 
-router.post('/:postId', authMiddleware, async (req, res) => {
+// 댓글 작성
+router.post('/:postId', async (req, res) => {
   const { postId } = req.params;
   const { nickname, comment } = req.body;
   let newDate = new Date();
   let date = newDate.toFormat('YYYY-MM-DD HH24:MI:SS');
 
   try {
-    const post = `INSERT INTO comment (commentTime, nickname, comment, upperPost ) VALUES ("${date}","${nickname}", "${comment}", "${postId}");`;
+    const post = `INSERT INTO comment (commentTime, nickname, comment, upperPost ) VALUES ("${date}", "${nickname}", "${comment}", "${postId}");`;
     db.query(post, req.body, (error, results, fields) => {
       if (error) {
+        console.log(error);
         res.status(400).send(error);
       } else {
         res.status(200).send({ results });
@@ -43,6 +45,7 @@ router.post('/:postId', authMiddleware, async (req, res) => {
   }
 });
 
+// 댓글 수정( 미들웨어때문에 배포하고 확인하기 )
 router.patch('/:commentId', authMiddleware, async (req, res) => {
   const { commentId } = req.params;
   const { comment } = req.body;
@@ -61,6 +64,7 @@ router.patch('/:commentId', authMiddleware, async (req, res) => {
   }
 });
 
+// 댓글 삭제( 미들웨어때문에 배포하고 확인하기 )
 router.delete('/:commentId', authMiddleware, async (req, res) => {
   const { commentId } = req.params;
   const user = res.locals.user;

@@ -42,7 +42,6 @@ async function emailExist(id_give) {
   const post = `SELECT * FROM user WHERE email = "${id_give}";`;
   const results = await db.query(post);
   if (results.length) {
-    console.log(results);
     return false;
   } else {
     return true;
@@ -53,7 +52,6 @@ async function nicknameExist(id_give) {
   const post = `SELECT * FROM user WHERE nickname = "${ id_give }";`;
   const results = await db.query(post);
   if (results.length) {
-    console.log(results);
     return false;
   } else {
     return true;

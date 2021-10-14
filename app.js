@@ -37,12 +37,12 @@ app.use(express.json()); // POST로 메소드 받을 때 req.body로 사용가�
 //
 const postRouter = require('./routers/post');
 const userRouter = require('./routers/user');
-const wishRouter = require('./routers/wish');
-// const commRouter = require('./routers/comment');
+// const wishRouter = require('./routers/wish');
+const commRouter = require('./routers/comment');
 app.use('/post', [ postRouter ]); // postRouter를 api 하위부분에서 쓰겠다 !
 app.use('/', [ userRouter ]);
-// app.use('/comment', [ commRouter ]);
-app.use('/wish', [ wishRouter ]);
+app.use('/comment', [ commRouter ]);
+// app.use('/wish', [ wishRouter ]);
 
 app.listen(port, () => {
   console.log(`listening at http://localhost:${ port }`);

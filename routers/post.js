@@ -43,12 +43,13 @@ router.get('/:postId', (req, res) => {
 
 //게시물 작성
 router.post('/', async (req, res) => {
-  const { title, spec, image, desc, place } = req.body;
+  const { title, nickname, spec, image, desc, place } = req.body;
   try {
-    const post = `INSERT INTO post (title, spec, image, descr, place) VALUES ("${title}", "${spec}", "${image}", "${desc}", "${place}")`;
-    db.query(post, req.body, (error, results, fields) => {
+    const post = `INSERT INTO post (title, nickname, spec, image, descr, place) VALUES ("${title}", "${nickname}", "${spec}", "${image}", "${desc}", "${place}")`;
+    db.query(post, req.body, (error, results) => {
       if (error) {
-        res.send(error);
+        console.log((error));
+        res.status(400).send(error);
       } else {
         res.send({ results });
       }
@@ -63,7 +64,7 @@ router.delete('/:postId', async (req, res) => {
   const { postId } = req.params;
   const { nickname } = req.body;
   try {
-    const post = `DELETE FROM post WHERE postId = ${postId} and title = "${nickname}";`;
+    const post = `DELETE FROM post WHERE postId = ${postId} and nickname = "${nickname}";`;
     db.query(post, req.body, (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
