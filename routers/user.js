@@ -1,15 +1,24 @@
 const express = require('express');
-const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const uf = require('./userfunction.js');
+const util = require('util')
 const mysql = require('mysql');
-const db = mysql.createConnection({
+const db = mysql.createPool({
+  connectionLimit: 10,
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE
 });
+db.query = util.promisify(db.query)
+// const mysql = require('sync-mysql');
+// const db = new mysql({
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_DATABASE
+// });
 
 
 // 회원가입
@@ -85,18 +94,16 @@ router.post('/loginwhat?', async (req, res) => {
 //회원가입 쿼리문
 router.post('/signupwhat', async (req, res) => {
   const { email, pw, pwCheck, nickname } = req.body;
-  let existEmail , existNickname;
-  const post = `SELECT * FROM uesr WHERE email = "${email}";`;
-  db.query(post, (error, results) => {
-    existEmail = results[0]
-  });
-  const post = `SELECT * FROM uesr WHERE nickname = "${nickname}";`;
-  db.query(post, (error, results) => {
-    existNickname = results[0]
-  });
-  if (existEmail) {
-    res.status(401).send({ result: '아이디가 중복입니다.' });
-  } else if (existNickname) {
+  let existEmail;
+  let existNickname;
+  // const postuser = `SELECT * FROM user WHERE nickname = "${nickname}";`;
+  // db.query(postuser, (error, results) => {
+  //   // existNickname = results[0]existNickname
+  // });
+  console.log(await uf.emailExist(email));
+  if (!await uf.emailExist(email)) {
+    res.status(401).send({ result: '아니 이게 맞나?' });
+  } else if (false) {
     res.status(401).send({ result: '닉네임이 중복입니다.' });
   } else if (!uf.idCheck(email)) {
     res.status(401).send({});
@@ -110,7 +117,7 @@ router.post('/signupwhat', async (req, res) => {
     const post = `INSERT INTO user (email, password, nickname) VALUES ("${email}", "${pw}", "${nickname}");`;
     db.query(post, req.body, (error, results, fields) => {
       if (error) {
-        res.send(error);
+        res.status(401).send(error);
       } else {
         res.send({ results : "완료?" });
       }

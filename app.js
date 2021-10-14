@@ -36,11 +36,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // POST로 메소드 받을 때 req.body로 사용가능하게 함
 //
 const postRouter = require('./routers/post');
-// const userRouter = require('./routers/user');
+const userRouter = require('./routers/user');
 // const wishRouter = require('./routers/wish');
 // const commRouter = require('./routers/comment');
 app.use('/post', [ postRouter ]); // postRouter를 api 하위부분에서 쓰겠다 !
-// app.use('/', [ userRouter ]);
+app.use('/', [ userRouter ]);
 // app.use('/comment', [ commRouter ]);
 // app.use('/wish', [ wishRouter ]);
 
