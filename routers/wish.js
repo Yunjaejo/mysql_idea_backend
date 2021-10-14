@@ -43,10 +43,12 @@ router.get('/', authMiddleware, async (req, res) => {
 });
 ///
 router.post("/", authMiddleware, async (req, res) => {
-  const { email, postId } = req.body;
-  const user = res.locals.user; 
+  const { postId } = req.body; // 사실 이거 포스트아이디임
+  console.log('포스트아이디는?' ,postId)
+  console.log('바디는?' ,req.body)
+  const user = res.locals.user;
   try {
-    const escapeQuery = [ user.userId , postId]
+    const escapeQuery = [ user.userId , postId ]
     const post = 'INSERT INTO wish (userId, postId) VALUES ( ?, ? )';
     db.query(post, escapeQuery, (error, results) => {
       if (error) {
