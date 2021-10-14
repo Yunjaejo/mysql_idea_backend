@@ -37,6 +37,7 @@ router.get('/', authMiddleware, async (req, res) => {
     }
     res.status(200).send({ post: postList });
   } catch (err) {
+    console.log("wish get요청시 에러가?");
     res.status(400).send({ err: err });
   }
 });
@@ -56,6 +57,7 @@ router.post("/", authMiddleware, async (req, res) => {
       }
     });
   } catch (err) {
+    console.log("여기서 에러가??")
     res.status(400).send({ err: err });
   }
 });
