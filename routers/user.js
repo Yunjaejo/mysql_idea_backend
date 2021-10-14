@@ -94,16 +94,10 @@ router.post('/loginwhat?', async (req, res) => {
 //회원가입 쿼리문
 router.post('/signupwhat', async (req, res) => {
   const { email, pw, pwCheck, nickname } = req.body;
-  let existEmail;
-  let existNickname;
-  // const postuser = `SELECT * FROM user WHERE nickname = "${nickname}";`;
-  // db.query(postuser, (error, results) => {
-  //   // existNickname = results[0]existNickname
-  // });
   console.log(await uf.emailExist(email));
   if (!await uf.emailExist(email)) {
     res.status(401).send({ result: '아니 이게 맞나?' });
-  } else if (false) {
+  } else if (await uf.nicknameExist(nickname)) {
     res.status(401).send({ result: '닉네임이 중복입니다.' });
   } else if (!uf.idCheck(email)) {
     res.status(401).send({});
