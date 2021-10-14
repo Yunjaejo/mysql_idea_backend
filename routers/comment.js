@@ -15,7 +15,7 @@ router.get('/:postId', async (req, res) => {
   try {
     const { postId } = req.params;
     const post = `SELECT * FROM comment WHERE upperPost = ${postId}`;
-    db.query(post, (error, results) => {
+    await db.query(post, (error, results) => {
       res.status(200).send({ results });
     });
   } catch (err) {
@@ -32,7 +32,7 @@ router.post('/:postId', async (req, res) => {
 
   try {
     const post = `INSERT INTO comment (commentTime, nickname, comment, upperPost ) VALUES ("${date}", "${nickname}", "${comment}", "${postId}");`;
-    db.query(post, req.body, (error, results, fields) => {
+    await db.query(post, req.body, (error, results, fields) => {
       if (error) {
         console.log(error);
         res.status(400).send(error);
@@ -52,7 +52,7 @@ router.patch('/:commentId', authMiddleware, async (req, res) => {
   const user = res.locals.user;
   try {
     const post = `UPDATE comment SET comment= "${comment}" WHERE commentId = ${commentId} AND nickname = ${user.nickname};`;
-    db.query(post, req.body, (error, results, fields) => {
+    await db.query(post, req.body, (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
       } else {
@@ -70,7 +70,7 @@ router.delete('/:commentId', authMiddleware, async (req, res) => {
   const user = res.locals.user;
   try {
     const post = `DELETE FROM comment WHERE commentId = ${commentId} AND nickname = ${user.nickname};`;
-    db.query(post, req.body, (error, results, fields) => {
+    await db.query(post, req.body, (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
       } else {

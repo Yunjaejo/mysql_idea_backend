@@ -1,25 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
-const db = mysql.createConnection({
+const util = require('util');
+const db = mysql.createPool({
+  connectionLimit: 10,
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE
 });
+db.query = util.promisify(db.query);
 
 //게시글 조회
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { place } = req.query;
     if (!place) {
       let post = `SELECT * FROM post ORDER BY postId DESC`;
-      db.query(post, (error, results) => {
+      await db.query(post, (error, results) => {
         res.send({ results });
       });
     } else {
       let post = `SELECT * FROM post WHERE place = ${place} ORDER BY postId DESC`;
-      db.query(post, (error, results) => {
+      await db.query(post, (error, results) => {
         res.send({ results });
       });
     }
@@ -29,11 +32,11 @@ router.get('/', (req, res) => {
 });
 
 //게시글 상세조회
-router.get('/:postId', (req, res) => {
+router.get('/:postId', async (req, res) => {
   try {
     const { postId } = req.params;
     const post = `SELECT * FROM post WHERE postId = ${postId}`;
-    db.query(post, (error, results) => {
+    await db.query(post, (error, results) => {
       res.status(200).send({ results });
     });
   } catch (err) {
@@ -46,7 +49,7 @@ router.post('/', async (req, res) => {
   const { title, nickname, spec, image, desc, place } = req.body;
   try {
     const post = `INSERT INTO post (title, nickname, spec, image, descr, place) VALUES ("${title}", "${nickname}", "${spec}", "${image}", "${desc}", "${place}")`;
-    db.query(post, req.body, (error, results) => {
+    await db.query(post, req.body, (error, results) => {
       if (error) {
         console.log((error));
         res.status(400).send(error);
@@ -65,7 +68,7 @@ router.delete('/:postId', async (req, res) => {
   const { nickname } = req.body;
   try {
     const post = `DELETE FROM post WHERE postId = ${postId} and nickname = "${nickname}";`;
-    db.query(post, req.body, (error, results, fields) => {
+    await db.query(post, req.body, (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
       } else {
@@ -83,7 +86,7 @@ router.patch('/:postId', async (req, res) => {
   const { title, spec, image, desc, place } = req.body;
   try {
     const post = `UPDATE post SET title= "${title}",spec ="${spec}",descr ="${desc}",image ="${image}",place =${place} WHERE postId = ${postId};`;
-    db.query(post, req.body, (error, results, fields) => {
+    await db.query(post, req.body, (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
       } else {
