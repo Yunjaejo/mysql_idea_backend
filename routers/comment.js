@@ -73,13 +73,13 @@ router.patch('/:commentId', authMiddleware, async (req, res) => {
 });
 
 // 댓글 삭제( 미들웨어때문에 배포하고 확인하기 )
-router.delete('/:commentId', authMiddleware, async (req, res) => {
+router.delete('/:commentId',  authMiddlewareasync, (req, res) => {
   const { commentId } = req.params;
   const user = res.locals.user;
-  var docomment = [commentId, user.nickname]
   try {
+    var docomment = [commentId, user.nickname]
     const post = 'DELETE FROM comment WHERE commentId = ? AND nickname = ?;';
-    await db.query(post, req.body, (error, results, fields) => {
+    db.query(post, docomment , (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
       } else {
