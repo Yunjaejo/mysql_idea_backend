@@ -16,8 +16,8 @@ module.exports = async (req, res, next) => {
     if (token) {
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
       let users;
-      const post = `SELECT * FROM user WHERE userId = ${decoded.userId}`;
-      const results = db.query(post);
+      const post = `SELECT * FROM user WHERE userId = ?`;
+      const results = db.query(post,[decoded.userId]);
       users = {
         userId: results[0]['userId'],
         email: results[0]['email'],

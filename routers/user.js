@@ -24,8 +24,8 @@ db.query = util.promisify(db.query);
 router.post('/login', async (req, res) => {
   const { email, pw } = req.body;
   let users;
-  const post = `SELECT * FROM user WHERE email = "${email}"`;
-  const results = await db.query(post);
+  const post = 'SELECT * FROM user WHERE email = ?';
+  const results = await db.query(post, [email]);
   users = results[0];
   if (users) {
     if (users.password === pw) {
@@ -57,8 +57,9 @@ router.post('/signup', async (req, res) => {
   } else if (!uf.pw_idCheck(email, pw)) {
     res.status(401).send({});
   } else {
-    const post = `INSERT INTO user (email, password, nickname) VALUES ("${email}", "${pw}", "${nickname}");`;
-    db.query(post, req.body, (error, results, fields) => {
+    const dopost = [email, pw, nickname]
+    const post = 'INSERT INTO user (email, password, nickname) VALUES (?, ? ,?);';
+    db.query(post, dopost, (error, results, fields) => {
       if (error) {
         res.status(401).send(error);
       } else {
