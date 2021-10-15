@@ -39,7 +39,7 @@ router.post('/:postId', authMiddleware, async (req, res) => {
     comment: comment,
     upperPost: postId
   };
-  console.log('두 코멘트는', docomment);
+  console.log('두 코멘트(디비에 담기는 모든데이터)는', docomment);
   try {
     const post = 'INSERT INTO comment set ?;';
     await db.query(post, docomment, (error, results, fields) => {
