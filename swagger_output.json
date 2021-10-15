@@ -663,61 +663,49 @@
     }
   },
   "definitions": {
-    "Parents": {
+    "user": {
       "type": "object",
       "properties": {
-        "father": {
+        "type": {
           "type": "string",
-          "example": "Simon Doe"
+          "example": "object"
         },
-        "mother": {
-          "type": "string",
-          "example": "Marie Doe"
-        }
-      }
-    },
-    "User": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "example": "Jhon Doe"
-        },
-        "age": {
-          "type": "number",
-          "example": 29
-        },
-        "parents": {
-          "$ref": "#/definitions/Parents"
-        },
-        "diplomas": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "school": {
-                "type": "string",
-                "example": "XYZ University"
-              },
-              "year": {
-                "type": "number",
-                "example": 2020
-              },
-              "completed": {
-                "type": "boolean",
-                "example": true
-              },
-              "internship": {
-                "type": "object",
-                "properties": {
-                  "hours": {
-                    "type": "number",
-                    "example": 290
-                  },
-                  "location": {
-                    "type": "string",
-                    "example": "XYZ Company"
-                  }
+        "properties": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "password": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "nickname": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
                 }
               }
             }
@@ -725,26 +713,182 @@
         }
       }
     },
-    "AddUser": {
+    "post": {
       "type": "object",
       "properties": {
-        "name": {
+        "type": {
           "type": "string",
-          "example": "Jhon Doe"
+          "example": "object"
         },
-        "age": {
-          "type": "number",
-          "example": 29
-        },
-        "about": {
-          "type": "string",
-          "example": ""
+        "properties": {
+          "type": "object",
+          "properties": {
+            "postId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "title": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "nickname": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "spec": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "descr": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "image": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "place": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            }
+          }
         }
-      },
-      "required": [
-        "name",
-        "age"
-      ]
+      }
+    },
+    "comment": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "commentId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "commentTime": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "nickname": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "comment": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "String"
+                }
+              }
+            },
+            "upperPost": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "wish": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "Id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "userId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            },
+            "postId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Number"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

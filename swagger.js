@@ -27,37 +27,87 @@ const doc = {
     }
   },
   definitions: {
-    Parents: {
-      father: 'Simon Doe',
-      mother: 'Marie Doe'
+    user: {
+      'type': 'object',
+      'properties': {
+        'userId': {
+          'type': 'Number'
+        },
+        'email': {
+          'type': 'String'
+        },
+        'password': {
+          'type': 'String'
+        },
+        'nickname': {
+          'type': 'String'
+        },
+      }
     },
-    User: {
-      name: 'Jhon Doe',
-      age: 29,
-      parents: {
-        $ref: '#/definitions/Parents'
-      },
-      diplomas: [
-        {
-          school: 'XYZ University',
-          year: 2020,
-          completed: true,
-          internship: {
-            hours: 290,
-            location: 'XYZ Company'
-          }
-        }
-      ]
+    post: {
+      'type': 'object',
+      'properties': {
+        'postId': {
+          'type': 'Number'
+        },
+        'title': {
+          'type': 'String'
+        },
+        'nickname': {
+          'type': 'String'
+        },
+        'spec': {
+          'type': 'String'
+        },
+        'descr': {
+          'type': 'String'
+        },
+        'image': {
+          'type': 'String'
+        },
+        'place': {
+          'type': 'Number'
+        },
+      }
     },
-    AddUser: {
-      $name: 'Jhon Doe',
-      $age: 29,
-      about: ''
-    }
+    comment: {
+      'type': 'object',
+      'properties': {
+        'commentId': {
+          'type': 'Number'
+        },
+        'commentTime': {
+          'type': 'String'
+        },
+        'nickname': {
+          'type': 'String'
+        },
+        'comment': {
+          'type': 'String'
+        },
+        'upperPost': {
+          'type': 'Number'
+        },
+      }
+    },
+    wish: {
+      'type': 'object',
+      'properties': {
+        'Id': {
+          'type': 'Number'
+        },
+        'userId': {
+          'type': 'Number'
+        },
+        'postId': {
+          'type': 'Number'
+        },
+      }
+    },
   }
 };
 
 const outputFile = './swagger_output.json';
-const endpointsFiles = ['./routers/*.js', './app.js'];
+const endpointsFiles = [ './routers/*.js', './app.js' ];
 
 swaggerAutogen(outputFile, endpointsFiles, doc);
