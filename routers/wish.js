@@ -17,25 +17,15 @@ db.query = util.promisify(db.query);
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const { user } = res.locals;
-    const post = `SELECT * FROM wish WHERE userId = ${user.userId}`;
-    const results = await db.query(post);
-    let 포스트아이디리스트 = [];
-    for (a of results) {
-      doc = {
-        wishId : a['Id'],
-        postId : a['postId']
-      }
-      포스트아이디리스트.push(doc);
+    const escapeQuery = [user.userId]
+    const post = 'SELECT post.*, wish.Id FROM post inner join wish On post.postId = wish.postId WHERE wish.userId = ?';
+    let results = await db.query(post,escapeQuery);
+    for(indexresults of results)
+    if (indexresults.hasOwnProperty('Id')) {
+      indexresults.wishId= indexresults.Id;
+      delete indexresults.Id;
     }
-    //Post.find ( { _id: { $in: b } } )
-    let postList = [];
-    for (let i = 0 ; i < 포스트아이디리스트.length; i++) {
-      const posttest = `SELECT * FROM post WHERE postId = "${포스트아이디리스트[i].postId}"`;
-      let resultspost = await db.query(posttest);
-      resultspost[0].wishId = 포스트아이디리스트[i].wishId;
-      postList.push(resultspost[0]);
-    }
-    res.status(200).send({ post: postList });
+    res.status(200).send({ post: results });
   } catch (err) {
     console.log("wish get요청시 에러가?");
     res.status(400).send({ err: err });
