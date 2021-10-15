@@ -49,7 +49,7 @@ async function emailExist(id_give) {
 }
 
 async function nicknameExist(id_give) {
-  const post = 'SELECT * FROM user WHERE nickname = ?};';
+  const post = 'SELECT * FROM user WHERE nickname = ?;';
   const results = await db.query(post,[id_give]);
   if (results.length) {
     return false;
