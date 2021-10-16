@@ -47,6 +47,7 @@ router.get('/:postId', async (req, res) => {
 
 //게시물 작성
 router.post('/', async (req, res) => {
+  console.log('누군가가 글쓰기를 시도했어요. ')
   const { title, nickname, spec, image, desc, place } = req.body;
   const escapeQuery = {
     title: title,
@@ -58,13 +59,13 @@ router.post('/', async (req, res) => {
   };
 
   try {
-    console.log(image);
     const post = `INSERT INTO post set ?`;
     await db.query(post, escapeQuery, (error, results) => {
       if (error) {
-        console.log(( error ));
+        console.log(( '포스트 쓰기에서 에러가 났어요. ', error ));
         res.status(400).send(error);
       } else {
+        console.log(('포스트 쓰기가 성공했어요. '))
         res.send({ results });
       }
     });
@@ -78,7 +79,7 @@ router.delete('/:postId', authMiddleware, async (req, res) => {
   const { postId } = req.params;
   const user = res.locals.user;
   const nickname = user.nickname;
-  console.log('삭제시 닉네임받는값은? ', nickname)
+  console.log(nickname, '님이 글을 삭제하려고합니다.')
   try {
     const post = `DELETE FROM post WHERE postId = ${postId} and nickname = "${nickname}";`;
     await db.query(post, req.body, (error, results, fields) => {
@@ -98,7 +99,7 @@ router.delete('/:postId', authMiddleware, async (req, res) => {
 
 //게시물 수정
 router.patch('/:postId', async (req, res) => {
-  console.log('수정라우터가 불린다불린다불린다');
+  console.log('포스트 수정라우터가 불린다불린다불린다');
   const { postId } = req.params;
   const title = req.body.title;
   const spec = req.body.spec;
@@ -110,15 +111,15 @@ router.patch('/:postId', async (req, res) => {
     const post = `UPDATE post SET ? WHERE postId = ${postId};`;
     await db.query(post, escapeEdit, (error, results, fields) => {
       if (error) {
-        console.log('수정요청 왔는데 에러남', error);
+        console.log('포스트 수정요청 왔는데 에러남', error);
         res.status(400).send(error);
       } else {
-        console.log('수정 성공');
+        console.log('포스트 수정 성공');
         res.status(200).send({ results });
       }
     });
   } catch (err) {
-    console.log('수정요청 자체가 에러남', err);
+    console.log('포스트 수정요청 자체가 에러남', err);
     res.status(400).send({ err: err });
   }
 });

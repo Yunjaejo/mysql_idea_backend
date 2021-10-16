@@ -63,6 +63,7 @@ router.post('/signup', async (req, res) => {
       if (error) {
         res.status(401).send(error);
       } else {
+        console.log('누군가가 회원가입을 했습니다.');
         res.send({ results: '완료?' });
       }
     });
