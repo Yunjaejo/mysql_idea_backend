@@ -98,9 +98,10 @@ router.patch('/:postId', async (req, res) => {
   const image = req.body.image;
   const desc = req.body.desc;
   const place = req.body.place;
-  const escapeEdit = {title: title, spec: spec, image: image, descr: desc, place: place}
+  const escapeEdit = { title: title, spec: spec, image: image, descr: desc, place: place };
+  console.log('게시글 수정 라우터 통과함!!!!!!!!!!!!!');
   console.log('수정시 바디에서 넘어오는 이미지는', image);
-  console.log('모든 받아오는 값들은?', escapeEdit)
+  console.log('모든 받아오는 값들은?', escapeEdit);
   try {
     const post = `UPDATE post SET ? WHERE postId = ${postId};`;
     await db.query(post, escapeEdit, (error, results, fields) => {
