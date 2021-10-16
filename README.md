@@ -1,5 +1,5 @@
 # mysql_idea_backend
-항해99 3기 4주차 미니프로젝트 6조 백엔드(조윤재, 권영준, 김도형, 배수인, 배재경, 탁정규) <br>
+항해99 3기 4주차 미니프로젝트 6조 (김도형, 조윤재, 탁정규) <br>
 프로젝트 기간: 2021년 10월 11일 ~ 2021년 10월 16일
 
 ### IDEA
@@ -11,7 +11,6 @@
 
 ### 소개
 * 프론트엔드(React)와 백엔드(Node.js)의 첫 협업 프로젝트<br>
-  백엔드 개발: 김도형, 조윤재, 탁정규
 * CRUD를 이용한 회원가입, 게시글과 댓글, 위시리스트 구현
 * ORM을 없이 데이터베이스 사용
 
@@ -21,8 +20,8 @@
 http://
 
 
-<a href="https://github.com/devLily/Hanghae6-IDEA_frontend/tree/master">프론트엔드 깃허브 링크
-
+<a href="https://github.com/devLily/Hanghae6-IDEA_frontend/tree/master">프론트엔드 github</a>
+(권영준, 배수인, 배재경)
 <hr>
 
 ### 사용한 기술 스택
