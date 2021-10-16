@@ -62,18 +62,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "nickname": {
-                  "example": "any"
-                }
-              }
-            }
           }
         ],
         "responses": {
@@ -82,6 +70,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
@@ -407,18 +398,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "nickname": {
-                  "example": "any"
-                }
-              }
-            }
           }
         ],
         "responses": {
@@ -427,6 +406,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middlewares/auth-middleware');
 const mysql = require('mysql');
 const util = require('util');
 const db = mysql.createPool({
@@ -73,19 +74,24 @@ router.post('/', async (req, res) => {
 });
 
 //게시물 삭제
-router.delete('/:postId', async (req, res) => {
+router.delete('/:postId', authMiddleware, async (req, res) => {
   const { postId } = req.params;
-  const { nickname } = req.body;
+  const user = res.locals.user;
+  const nickname = user.nickname;
+  console.log('삭제시 닉네임받는값은? ', nickname)
   try {
     const post = `DELETE FROM post WHERE postId = ${postId} and nickname = "${nickname}";`;
     await db.query(post, req.body, (error, results, fields) => {
       if (error) {
+        console.log('포스트 삭제요청왔는데 실패함', error);
         res.status(400).send(error);
       } else {
+        console.log('포스트삭제요청 성공함.', postId);
         res.status(200).send({ results });
       }
     });
   } catch (err) {
+    console.log('포스트 삭제요청 자체가 에러남 ', err);
     res.status(400).send({ err: err });
   }
 });
@@ -99,19 +105,19 @@ router.patch('/:postId', async (req, res) => {
   const desc = req.body.desc;
   const place = req.body.place;
   const escapeEdit = { title: title, spec: spec, image: image, descr: desc, place: place };
-  console.log('게시글 수정 라우터 통과함!!!!!!!!!!!!!');
-  console.log('수정시 바디에서 넘어오는 이미지는', image);
-  console.log('모든 받아오는 값들은?', escapeEdit);
   try {
     const post = `UPDATE post SET ? WHERE postId = ${postId};`;
     await db.query(post, escapeEdit, (error, results, fields) => {
       if (error) {
+        console.log('수정요청 왔는데 에러남', error);
         res.status(400).send(error);
       } else {
+        console.log('수정 성공');
         res.status(200).send({ results });
       }
     });
   } catch (err) {
+    console.log('수정요청 자체가 에러남', err);
     res.status(400).send({ err: err });
   }
 });
