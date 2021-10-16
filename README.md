@@ -37,6 +37,7 @@ http://
 * sequelize없이 데이터베이스 접근 및 사용법이 익숙하지 않았음.
 * 클라이언트에서 body에 담긴 url값이 db에 들어갈 때 변형됨
 * DB에서 Join 처리를 했지만 쿼리문으로 DB에 두번 접속을 하여 처리를 해야했음. 한번의 요청으로 해야함.
+* noSQL에서 동기화처리를 깔끔하게 했지만 SQL로 migration 처리하던도중 비동기 방식으로 계속되는 현상
 
 
 ### 해결 시도
@@ -46,5 +47,6 @@ http://
 ```sql
 SELECT post.*, wish.Id FROM post inner join wish On post.postId = wish.postId WHERE wish.userId = ?
 ```
+* 쿼리문을 프로미스를 이용하여 처리하는 것을 발견 이후 동기처리를 위해 awite추가와 DB동기화 처리를했음.
    
 
