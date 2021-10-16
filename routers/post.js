@@ -93,10 +93,16 @@ router.delete('/:postId', async (req, res) => {
 //게시물 수정
 router.patch('/:postId', async (req, res) => {
   const { postId } = req.params;
-  const { title, spec, image, desc, place } = req.body;
+  const title = req.body.title;
+  const spec = req.body.spec;
+  const image = req.body.image;
+  const desc = req.body.desc;
+  const place = req.body.place;
+  const escapeEdit = {title: title, spec: spec, image: image, descr: desc, place: place}
+  console.log('수정시 바디에서 넘어오는 이미지는', image);
+  console.log('모든 받아오는 값들은?', escapeEdit)
   try {
-    escapeQuery = [title, spec, desc, image,  place, postId]
-    const post = 'UPDATE post SET title= ?,spec =?,descr =,image =?,place =? WHERE postId = ?;';
+    const post = `UPDATE post SET ? WHERE postId = ${postId};`;
     await db.query(post, escapeEdit, (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
