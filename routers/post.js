@@ -95,8 +95,9 @@ router.patch('/:postId', async (req, res) => {
   const { postId } = req.params;
   const { title, spec, image, desc, place } = req.body;
   try {
-    const post = `UPDATE post SET title= "${title}",spec ="${spec}",descr ="${desc}",image ="${image}",place =${place} WHERE postId = ${postId};`;
-    await db.query(post, req.body, (error, results, fields) => {
+    escapeQuery = [title, spec, desc, image,  place, postId]
+    const post = 'UPDATE post SET title= ?,spec =?,descr =,image =?,place =? WHERE postId = ?;';
+    await db.query(post, escapeQuery, (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
       } else {
