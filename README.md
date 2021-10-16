@@ -49,7 +49,7 @@ http://
 ```sql
 SELECT post.*, wish.Id FROM post inner join wish On post.postId = wish.postId WHERE wish.userId = ?
 ```
-* 와 같이 DB에서 조인을 한 키값과 비교하여 처리하였음.
+  와 같이 DB에서 조인을 한 키값과 비교하여 처리하였음.
 * 
 * 
 * 
