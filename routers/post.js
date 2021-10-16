@@ -98,6 +98,7 @@ router.delete('/:postId', authMiddleware, async (req, res) => {
 
 //게시물 수정
 router.patch('/:postId', async (req, res) => {
+  console.log('수정라우터가 불린다불린다불린다');
   const { postId } = req.params;
   const title = req.body.title;
   const spec = req.body.spec;
