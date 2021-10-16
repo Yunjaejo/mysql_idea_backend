@@ -54,14 +54,14 @@ router.post('/', async (req, res) => {
     image: image,
     descr: desc,
     place: place,
-  }
+  };
 
   try {
     console.log(image);
     const post = `INSERT INTO post set ?`;
     await db.query(post, escapeQuery, (error, results) => {
       if (error) {
-        console.log((error));
+        console.log(( error ));
         res.status(400).send(error);
       } else {
         res.send({ results });
@@ -94,9 +94,17 @@ router.delete('/:postId', async (req, res) => {
 router.patch('/:postId', async (req, res) => {
   const { postId } = req.params;
   const { title, spec, image, desc, place } = req.body;
+
+  const escapeEdit = {
+    title: title,
+    spec: spec,
+    image: image,
+    descr: desc,
+    place: place,
+  };
   try {
-    const post = `UPDATE post SET title= "${title}",spec ="${spec}",descr ="${desc}",image ="${image}",place =${place} WHERE postId = ${postId};`;
-    await db.query(post, req.body, (error, results, fields) => {
+    const post = `UPDATE post SET ? WHERE postId = ${postId}`;
+    await db.query(post, escapeEdit, (error, results, fields) => {
       if (error) {
         res.status(400).send(error);
       } else {
