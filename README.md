@@ -42,9 +42,9 @@ http://
 ### 해결 시도
 * mySQL 쿼리문을 공부하고 node.js와 mySQL을 연동하는 법을 찾아서 접목
 * 쿼리문 escape처리를 통해 해결
-* Join 쿼리문을 이용하여
+* Join 쿼리문을 이용하여 아래와 같이 DB에서 조인을 한 키값과 비교하여 처리하였음.
 ```sql
 SELECT post.*, wish.Id FROM post inner join wish On post.postId = wish.postId WHERE wish.userId = ?
 ```
-   와 같이 DB에서 조인을 한 키값과 비교하여 처리하였음.
+   
 
