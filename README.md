@@ -17,7 +17,7 @@
 <hr>
 
 ###  링크
-http://
+http://ideafrontbuild.s3-website.ap-northeast-2.amazonaws.com/
 
 
 <a href="https://github.com/devLily/Hanghae6-IDEA_frontend/tree/master">프론트엔드 github</a>
