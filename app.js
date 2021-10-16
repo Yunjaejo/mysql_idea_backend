@@ -1,7 +1,12 @@
 const express = require('express'); // 익스프레스 참조
-const cookieParser = require('cookie-parser');
 const app = express(); // 익스프레스 쓸때는 app이라고 명시
+
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./swagger_output.json')
+
+const cookieParser = require('cookie-parser');
 app.use(cookieParser()); // 쿠키값을 꺼낼 수 있음
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -43,6 +48,8 @@ app.use('/post', [ postRouter ]); // postRouter를 api 하위부분에서 쓰겠
 app.use('/', [ userRouter ]);
 app.use('/comment', [ commRouter ]);
 app.use('/wish', [ wishRouter ]);
+
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.listen(port, () => {
   console.log(`listening at http://localhost:${ port }`);

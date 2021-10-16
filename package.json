@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "prestart": "node ./swagger.js"
   },
   "repository": {
     "type": "git",
@@ -26,5 +27,9 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.13"
+  },
+  "devDependencies": {
+    "swagger-autogen": "^2.11.2",
+    "swagger-ui-express": "^4.1.6"
   }
 }
