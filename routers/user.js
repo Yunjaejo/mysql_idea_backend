@@ -45,9 +45,9 @@ router.post('/signup', async (req, res) => {
   const { email, pw, pwCheck, nickname } = req.body;
   console.log(await uf.emailExist(email));
   if (!await uf.emailExist(email)) {
-    res.status(401).send({ result: '아니 이게 맞나?' });
+    res.status(401).send({ result: '선생님, 이메일이 중복같은데요??' });
   } else if (!await uf.nicknameExist(nickname)) {
-    res.status(401).send({ result: '닉네임이 중복입니다.' });
+    res.status(401).send({ result: '선생님, 닉네임이 중복같은데요??' });
   } else if (!uf.idCheck(email)) {
     res.status(401).send({});
   } else if (!uf.pwConfirm(pw, pwCheck)) {
