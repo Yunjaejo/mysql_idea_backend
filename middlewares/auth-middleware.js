@@ -28,13 +28,11 @@ module.exports = async (req, res, next) => {
       let users;
       const post = `SELECT * FROM user WHERE email = ?`;
       const results = await db.query(post,[decoded.email]);
-      console.log(results)
       users = {
         userId: results[0]['userId'],
         email: results[0]['email'],
         nickname: results[0]['nickname'],
       };
-
       res.locals.user = users;
       console.log('로컬 유저는?', res.locals.user);
     } else {

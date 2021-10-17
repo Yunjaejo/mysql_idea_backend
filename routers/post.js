@@ -16,13 +16,13 @@ db.query = util.promisify(db.query);
 router.get('/', async (req, res) => {
   try {
     const { place } = req.query;
-    if (!place) {
-      let post = `SELECT * FROM post ORDER BY postId DESC`;
+    if (!place) {             // 쿼리스트링으로 place값이 안들어있다면
+      let post = `SELECT * FROM post ORDER BY postId DESC`;         // 모든 게시글을 postId를 역순으로 뽑아라
       await db.query(post, (error, results) => {
         res.send({ results });
       });
-    } else {
-      let post = `SELECT * FROM post WHERE place = ${place} ORDER BY postId DESC`;
+    } else {                  // place가 들어있다면?
+      let post = `SELECT * FROM post WHERE place = ${place} ORDER BY postId DESC`;    // 게시글의 place가 넘어온 값과 같은 것들을 역순으로 뽑아라 !!
       await db.query(post, (error, results) => {
         res.send({ results });
       });
@@ -36,8 +36,8 @@ router.get('/', async (req, res) => {
 router.get('/:postId', async (req, res) => {
   try {
     const { postId } = req.params;
-    const post = `SELECT * FROM post WHERE postId = ${postId}`;
-    await db.query(post, (error, results) => {
+    const post = `SELECT * FROM post WHERE postId = ${postId}`;       // postId가 넘어온 postId와 같은 게시글을 보여줘
+    await db.query(post, (error, results) => {                        // db.query(쿼리문, 콜백)
       res.status(200).send({ results });
     });
   } catch (err) {
@@ -45,9 +45,8 @@ router.get('/:postId', async (req, res) => {
   }
 });
 
-//게시물 작성
+//게시물 작성            // url값 오염되지 않으려면 escape 꼭 사용하자 !
 router.post('/', async (req, res) => {
-  console.log('누군가가 글쓰기를 시도했어요. ')
   const { title, nickname, spec, image, desc, place } = req.body;
   const escapeQuery = {
     title: title,
@@ -59,13 +58,11 @@ router.post('/', async (req, res) => {
   };
 
   try {
-    const post = `INSERT INTO post set ?`;
-    await db.query(post, escapeQuery, (error, results) => {
+    const post = `INSERT INTO post set ?`;                      // post테이블에 ?를 저장해랏
+    await db.query(post, escapeQuery, (error, results) => {     // db.query(쿼리문, escape했다면 넣을 값, 콜백)
       if (error) {
-        console.log(( '포스트 쓰기에서 에러가 났어요. ', error ));
         res.status(400).send(error);
       } else {
-        console.log(('포스트 쓰기가 성공했어요. '))
         res.send({ results });
       }
     });
@@ -77,29 +74,24 @@ router.post('/', async (req, res) => {
 //게시물 삭제
 router.delete('/:postId', authMiddleware, async (req, res) => {
   const { postId } = req.params;
-  const user = res.locals.user;
+  const user = res.locals.user;                                   // 미들웨어 거치니까 여기서 유저정보 꺼내기
   const nickname = user.nickname;
-  console.log(nickname, '님이 글을 삭제하려고합니다.')
   try {
-    const post = `DELETE FROM post WHERE postId = ${postId} and nickname = "${nickname}";`;
+    const post = `DELETE FROM post WHERE postId = ${postId} and nickname = "${nickname}";`;     // post테이블에서, postId와 nickname이 넘어온 값과 같은 것을 삭제해라
     await db.query(post, req.body, (error, results, fields) => {
       if (error) {
-        console.log('포스트 삭제요청왔는데 실패함', error);
         res.status(400).send(error);
       } else {
-        console.log('포스트삭제요청 성공함.', postId);
         res.status(200).send({ results });
       }
     });
   } catch (err) {
-    console.log('포스트 삭제요청 자체가 에러남 ', err);
     res.status(400).send({ err: err });
   }
 });
 
 //게시물 수정
 router.patch('/:postId', async (req, res) => {
-  console.log('포스트 수정라우터가 불린다불린다불린다');
   const { postId } = req.params;
   const title = req.body.title;
   const spec = req.body.spec;
@@ -108,18 +100,15 @@ router.patch('/:postId', async (req, res) => {
   const place = req.body.place;
   const escapeEdit = { title: title, spec: spec, image: image, descr: desc, place: place };
   try {
-    const post = `UPDATE post SET ? WHERE postId = ${postId};`;
+    const post = `UPDATE post SET ? WHERE postId = ${postId};`;       // postId가 긁어온 postId와 같다면 수정하자
     await db.query(post, escapeEdit, (error, results, fields) => {
       if (error) {
-        console.log('포스트 수정요청 왔는데 에러남', error);
         res.status(400).send(error);
       } else {
-        console.log('포스트 수정 성공');
         res.status(200).send({ results });
       }
     });
   } catch (err) {
-    console.log('포스트 수정요청 자체가 에러남', err);
     res.status(400).send({ err: err });
   }
 });

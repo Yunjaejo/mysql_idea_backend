@@ -3,7 +3,6 @@ const router = express.Router();
 const authMiddleware = require('../middlewares/auth-middleware');
 const util = require('util');
 const mysql = require('mysql');
-const { SSL_OP_SINGLE_DH_USE } = require('constants');
 const db = mysql.createPool({
   connectionLimit: 10,
   host: process.env.DB_HOST,
@@ -13,43 +12,39 @@ const db = mysql.createPool({
 });
 db.query = util.promisify(db.query);
 
-//수정필요 GET WISH ID 줄필요 있음....! 
+// 위시리스트 불러오기
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const { user } = res.locals;
     const escapeQuery = [user.userId]
-    const post = 'SELECT post.*, wish.Id FROM post inner join wish On post.postId = wish.postId WHERE wish.userId = ?';
+    const post = 'SELECT post.*, wish.Id FROM post inner join wish On post.postId = wish.postId WHERE wish.userId = ?';   // inner조인, velog 정리해둠
     let results = await db.query(post,escapeQuery);
-    for(indexresults of results)
-    if (indexresults.hasOwnProperty('Id')) {
-      indexresults.wishId= indexresults.Id;
-      delete indexresults.Id;
+    for(indexResults of results)                    // 쿼리의 결과 배열을 하나씩 뽑음
+    if (indexResults.hasOwnProperty('Id')) {        // indexResults가 Id라는 키가 있다면 true, 아니면 false
+      indexResults.wishId= indexResults.Id;
+      delete indexResults.Id;                       // wishId를 Id로 바꾸고 Id는 삭제
     }
     res.status(200).send({ post: results });
   } catch (err) {
-    console.log("wish get요청시 에러가?");
     res.status(400).send({ err: err });
   }
 });
-///
+
+// 위시리스트 추가하기
 router.post("/", authMiddleware, async (req, res) => {
-  const { postId } = req.body; // 사실 이거 포스트아이디임
-  console.log('포스트아이디는?' ,postId)
-  console.log('바디는?' ,req.body)
+  const { postId } = req.body;
   const user = res.locals.user;
   try {
     const escapeQuery = [ user.userId , postId ]
     const post = 'INSERT INTO wish (userId, postId) VALUES ( ?, ? )';
     db.query(post, escapeQuery, (error, results) => {
       if (error) {
-        console.log((error));
         res.status(400).send(error);
       } else {
         res.send({ results });
       }
     });
   } catch (err) {
-    console.log("여기서 에러가??")
     res.status(400).send({ err: err });
   }
 });
